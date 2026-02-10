@@ -1,3 +1,5 @@
+**website to display the html file:** https://lc-ga.github.io/DiDIER-docs/
+
 # DiDIER
 
 **DiMES Data Input & Experimental Records**
