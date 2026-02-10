@@ -201,7 +201,7 @@ After launching a window opens where you can:
 1. Enter/Edit experiment identification
 2. Define the number of DiMES heads exposed
 3. For each head specify: design, port location, surface element, and number of samples
-> **NOTE** If the inserted DiMES head design is set to *blank*, the head itself contains no samples and is therefore treated as a > single sample. For this reason, only **one** sample can be selected when the chosen design is *blank*.
+> **NOTE** If the inserted DiMES head design is set to *blank*, the head itself contains no samples and is therefore treated as a single sample. For this reason, only **one** sample can be selected when the chosen design is *blank*.
 
 4. For each sample, enter ID, label, comments, geometry, and measurement data
 5. Save the data to an HDF5 file
