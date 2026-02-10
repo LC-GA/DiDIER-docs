@@ -206,6 +206,8 @@ After launching a window opens where you can:
 4. For each sample, enter ID, label, comments, geometry, and measurement data
 5. Save the data to an HDF5 file
 
+![Poloidal cross-section of DIII-D showing all ports](images/d3d_ports_cross_section.png)
+
 ## Data Structure
 
 The package organizes data in a hierarchical structure, using a list of predefined dataclasses:
