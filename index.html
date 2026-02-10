@@ -1,0 +1,212 @@
+<h1 class="code-line" data-line-start=0 data-line-end=1 ><a id="DiDIER_0"></a>DiDIER</h1>
+<p class="has-line-data" data-line-start="2" data-line-end="3"><strong>DiMES Data Input &amp; Experimental Records</strong></p>
+<p class="has-line-data" data-line-start="4" data-line-end="5">A Python package for entering, managing, and storing DiMES (Divertor Material Evaluation Studies) experimental data, including pre- and post-exposure characterizations.</p>
+<h2 class="code-line" data-line-start=6 data-line-end=7 ><a id="Features_6"></a>Features</h2>
+<ul>
+<li class="has-line-data" data-line-start="8" data-line-end="9"><strong>Graphical User Interface</strong>: Intuitive tkinter-based GUI for data entry</li>
+<li class="has-line-data" data-line-start="9" data-line-end="10"><strong>Structured Data Model</strong>: Hierarchical data structures for experiments, heads, samples, and measurements</li>
+<li class="has-line-data" data-line-start="10" data-line-end="12"><strong>HDF5 Export</strong>: Standardized HDF5 file format for data storage and sharing</li>
+</ul>
+<h2 class="code-line" data-line-start=12 data-line-end=13 ><a id="Installation_12"></a>Installation</h2>
+<h3 class="code-line" data-line-start=14 data-line-end=15 ><a id="Dependencies_14"></a>Dependencies</h3>
+<ul>
+<li class="has-line-data" data-line-start="16" data-line-end="17"><strong>python</strong> &gt;= 3.10</li>
+<li class="has-line-data" data-line-start="17" data-line-end="18"><strong>numpy</strong> &gt;= 1.22.0</li>
+<li class="has-line-data" data-line-start="18" data-line-end="19"><strong>h5py</strong> &gt;= 3.7.0</li>
+<li class="has-line-data" data-line-start="19" data-line-end="20"><strong>pandas</strong> &gt;= 1.5.0</li>
+<li class="has-line-data" data-line-start="20" data-line-end="22"><strong>pillow</strong> &gt;= 9.0.0</li>
+</ul>
+<h3 class="code-line" data-line-start=22 data-line-end=23 ><a id="Install_with_pip_22"></a>Install with pip</h3>
+<p class="has-line-data" data-line-start="24" data-line-end="25">Install with pip in editable mode:</p>
+<pre><code class="has-line-data" data-line-start="27" data-line-end="29" class="language-bash">pip install <span class="hljs-operator">-e</span> .
+</code></pre>
+<p class="has-line-data" data-line-start="30" data-line-end="31">Or simple install</p>
+<pre><code class="has-line-data" data-line-start="33" data-line-end="35" class="language-bash">pip install .
+</code></pre>
+<p class="has-line-data" data-line-start="36" data-line-end="37">Then add the package to your Python path or install it in development mode.</p>
+<h1 class="code-line" data-line-start=38 data-line-end=39 ><a id="Quick_Start_38"></a>Quick Start</h1>
+<p class="has-line-data" data-line-start="40" data-line-end="42">This package is meant to be used by DIII-D users only to upload DiMES measurements on the cluster.<br>
+The package is available as a module on omega.</p>
+<p class="has-line-data" data-line-start="43" data-line-end="44">Type to launch:</p>
+<pre><code class="has-line-data" data-line-start="46" data-line-end="49" class="language-bash">module load didier
+didier
+</code></pre>
+<p class="has-line-data" data-line-start="50" data-line-end="51">As of now (February 2026, didier version 1.0) users can upload (for each sample) images and CSV files with the measurements of:</p>
+<ul>
+<li class="has-line-data" data-line-start="52" data-line-end="53">elemental composition (pre- and post-exposure)</li>
+<li class="has-line-data" data-line-start="53" data-line-end="54">roughness (pre- and post-exposure)</li>
+<li class="has-line-data" data-line-start="54" data-line-end="55">morphology (pre- and post-exposure)</li>
+<li class="has-line-data" data-line-start="55" data-line-end="56">areal density (pre- and post-exposure)</li>
+<li class="has-line-data" data-line-start="56" data-line-end="57">temperature (per shot)</li>
+<li class="has-line-data" data-line-start="57" data-line-end="59">bias (per shot)</li>
+</ul>
+<p class="has-line-data" data-line-start="59" data-line-end="60">Each file must be uploaded first in the cluster, preferably within the user <code>/home</code> or <code>/cscracth</code> directories. Then, it will be possible to store it organically within the DiMES database repository (situated on omega in /fusion/projects/results/dimes) using DiDIER. It is recommended to delete the files from their own home directory once DiDIER was used since the available space in the login nodes is usually limited.</p>
+<h2 class="code-line" data-line-start=61 data-line-end=62 ><a id="Permissions_and_ownership_61"></a>Permissions and ownership</h2>
+<p class="has-line-data" data-line-start="63" data-line-end="65">Each user has the right to read and edit all files they uploaded.<br>
+Each user has the right ro read all files available in the database.</p>
+<h2 class="code-line" data-line-start=66 data-line-end=67 ><a id="CSV_File_Format_66"></a>CSV File Format</h2>
+<p class="has-line-data" data-line-start="68" data-line-end="69"><strong>Premise:</strong> For simplicity, only surface-averaged quantities are currently supported. Future versions may allow uploading more complex files tracking the spatial evolution along the surface.</p>
+<p class="has-line-data" data-line-start="70" data-line-end="71">At present, depth-profiling data of the surface elemental composition and areal density are treated as two-dimensional (depth × element), temperature and bias are one-dimensional time series representing thermocouple and power-generator outputs, and roughness is characterized by a set of zero-dimensional scalar parameters.</p>
+<h3 class="code-line" data-line-start=73 data-line-end=74 ><a id="FORMAT_Surface_Elemental_Composition__areal_density_73"></a>FORMAT: Surface Elemental Composition &amp; areal density</h3>
+<p class="has-line-data" data-line-start="75" data-line-end="76">The first row must contain column headers. <strong>The first column must be named <code>depth</code></strong>, and the remaining columns must list symbols for elements from the periodic table as strings (e.g., <code>W</code>, <code>C</code>, <code>O</code>, etc. <strong>only use literal symbols from the periodic table</strong>).</p>
+<p class="has-line-data" data-line-start="77" data-line-end="78">All subsequent rows contain numerical values. The <code>depth</code> column specifies the measurement depth within the sample. Depth values may be provided in micrometers (µm) or nanometers (nm). Units available are listed in the DiDIER GUI as option menus.</p>
+<p class="has-line-data" data-line-start="79" data-line-end="80">Below is an example CSV file showing the surface composition depth profile expressed in weight percentage:</p>
+<pre><code class="has-line-data" data-line-start="82" data-line-end="88" class="language-csv">depth,W,C,O
+0,95,3,2
+5,97,2,1
+10,99,0.5,0.5
+15,99.5,0.3,0.2
+</code></pre>
+<h3 class="code-line" data-line-start=89 data-line-end=90 ><a id="FORMAT_Surface_Roughness_89"></a>FORMAT: Surface Roughness</h3>
+<p class="has-line-data" data-line-start="91" data-line-end="92">The first row must contain column headers. Below is the list of column headers supported by DiDIER for surface roughness characterization:</p>
+<ul>
+<li class="has-line-data" data-line-start="93" data-line-end="94"><code>Ra</code>, <code>Rz</code>, <code>Rq</code>, <code>Rp</code>, <code>Rv</code>, <code>Rt</code>, <code>Rsk</code>, <code>Rku</code>, <code>Rpk</code>, <code>Rvk</code>, <code>Rsm</code></li>
+<li class="has-line-data" data-line-start="94" data-line-end="95"><code>Sa</code>, <code>Sz</code>, <code>Sq</code>, <code>Sp</code>, <code>Sv</code>, <code>Sdr</code></li>
+<li class="has-line-data" data-line-start="95" data-line-end="96"><code>Pa</code>, <code>Pz</code></li>
+<li class="has-line-data" data-line-start="96" data-line-end="98"><code>Wa</code>, <code>Wz</code></li>
+</ul>
+<p class="has-line-data" data-line-start="98" data-line-end="99">Users must upload <strong>at least</strong> either <code>Sa</code> and <code>Sq</code> (surface average roughness and standard deviation over the analyzed area) <strong>or</strong> <code>Ra</code> and <code>Rq</code> (line average roughness and standard deviation along a surface profile).</p>
+<p class="has-line-data" data-line-start="100" data-line-end="101">The second (and last) row, must contain values. &lt;u&gt;Values must be reported in micrometers&lt;u&gt;.</p>
+<p class="has-line-data" data-line-start="102" data-line-end="103">Below is an example CSV file showing a list of surface roughness parameters in micrometers:</p>
+<pre><code class="has-line-data" data-line-start="105" data-line-end="108" class="language-csv">Ra,Rp,Rq,Rt
+6.3,25.81,7.77,34.14
+</code></pre>
+<h3 class="code-line" data-line-start=109 data-line-end=110 ><a id="Surface_Geometry_109"></a>Surface Geometry</h3>
+<p class="has-line-data" data-line-start="111" data-line-end="112">The geometry of exposed samples is crucial for relating spectroscopic measurements to erosion rates and must be precisely defined.</p>
+<p class="has-line-data" data-line-start="113" data-line-end="114">DiDIER includes a built-in default surface geometry corresponding to samples used within the 7-button DiMES head. All exposed samples are assumed to be circular, to have a diameter of 6 mm, and be flush with the DiMES head.</p>
+<p class="has-line-data" data-line-start="115" data-line-end="116">The DiMES head can also be tilted. Users are therefore encouraged to provide at least the exposed surface area (in cm² or mm²) and the surface inclination (in degrees or rad), where 0° corresponds to the flush configuration, while 90° is perpendicular to the portion of vessel in proximity of the DiMES head.</p>
+<p class="has-line-data" data-line-start="117" data-line-end="118">Exposed samples may be <strong>microstructured</strong> to improve the thermo-mechanical performance of Plasma Facing Components (PFCs). A well-known example is tungsten tiles with a <em>castellated</em> structure, which are designed to mitigate thermal stresses.</p>
+<p class="has-line-data" data-line-start="119" data-line-end="120">Currently, DiDIER classifies materials simply as either <strong>microstructured</strong> or <strong>non-microstructured</strong>. The specific type of microstructure cannot yet be selected from an option menu; however, users may manually describe the applied microstructure in the comments section associated with each sample.</p>
+<h3 class="code-line" data-line-start=121 data-line-end=122 ><a id="Temperature_121"></a>Temperature</h3>
+<p class="has-line-data" data-line-start="123" data-line-end="124">Temperature measurements must be provided as <strong>per-shot quantities</strong>.</p>
+<p class="has-line-data" data-line-start="125" data-line-end="126">In each CSV file the first row must contain column headers. The following columns are required &lt;u&gt;literally&lt;u&gt;:</p>
+<ul>
+<li class="has-line-data" data-line-start="127" data-line-end="128"><code>time</code>: time vector in seconds or milliseconds</li>
+<li class="has-line-data" data-line-start="128" data-line-end="130"><code>temp</code>: measured temperature in Kelvin, Celsius or Fahrenheit</li>
+</ul>
+<p class="has-line-data" data-line-start="130" data-line-end="131">Example CSV file:</p>
+<pre><code class="has-line-data" data-line-start="133" data-line-end="138" class="language-csv">time,temp
+0.,725
+1.,742
+2.,731
+</code></pre>
+<h3 class="code-line" data-line-start=139 data-line-end=140 ><a id="Bias_139"></a>Bias</h3>
+<p class="has-line-data" data-line-start="141" data-line-end="142">Bias measurements must be provided as <strong>per-shot quantities</strong>.</p>
+<p class="has-line-data" data-line-start="143" data-line-end="144">In each CSV file the first row must contain column headers. The following columns are required &lt;u&gt;literally&lt;u&gt;:</p>
+<ul>
+<li class="has-line-data" data-line-start="145" data-line-end="146"><code>time</code>: time vector in seconds or milliseconds</li>
+<li class="has-line-data" data-line-start="146" data-line-end="148"><code>bias</code>: measured voltage in Volts or kiloVolts</li>
+</ul>
+<pre><code class="has-line-data" data-line-start="149" data-line-end="154" class="language-csv">time,bias
+0.,-50
+1.,-50
+2.,-45
+</code></pre>
+<h2 class="code-line" data-line-start=156 data-line-end=157 ><a id="Images_156"></a>Images</h2>
+<p class="has-line-data" data-line-start="158" data-line-end="159">In DiDIER images for each DiMES head, sample morphology (e.g. scanning electron microscopy), and roughness (e.g. profilometry) may be uploaded.</p>
+<p class="has-line-data" data-line-start="160" data-line-end="161"><strong>Image constraints:</strong></p>
+<ul>
+<li class="has-line-data" data-line-start="161" data-line-end="162">Maximum file size per image: <strong>20 MB</strong></li>
+<li class="has-line-data" data-line-start="162" data-line-end="165">Supported formats:<br>
+<code>PNG</code>, <code>JPEG</code>, <code>TIFF</code>, <code>BMP</code>, <code>GIF</code>, <code>PPM</code>, <code>PGM</code>, <code>PBM</code>, <code>ICO</code></li>
+</ul>
+<p class="has-line-data" data-line-start="165" data-line-end="166">Please ensure all uploaded images meet these requirements before submission.</p>
+<h2 class="code-line" data-line-start=167 data-line-end=168 ><a id="Saving_Data_Using_the_Experiment_ID_167"></a>Saving Data Using the Experiment ID</h2>
+<p class="has-line-data" data-line-start="169" data-line-end="170">In DiDIER, data is organized by experiment. Each experiment performed at DIII-D is identified by a unique ID with the format:</p>
+<p class="has-line-data" data-line-start="171" data-line-end="172"><code>XXXX-YY-ZZ</code></p>
+<p class="has-line-data" data-line-start="173" data-line-end="174">XXXX is the year, YY is the the topical area code, and ZZ is an internal number chosen by run coordinator. XXXX, YY, and ZZ are all integers.</p>
+<p class="has-line-data" data-line-start="175" data-line-end="176">This ID is used by DiDIER as the unique identifier for storing data in an HDF5 file named:</p>
+<p class="has-line-data" data-line-start="177" data-line-end="178"><code>XXXX-YY-ZZ.hdf5</code></p>
+<p class="has-line-data" data-line-start="179" data-line-end="180">located in:</p>
+<p class="has-line-data" data-line-start="181" data-line-end="182"><code>/fusion/projects/results/dimes</code></p>
+<p class="has-line-data" data-line-start="183" data-line-end="184">Some DiMES experiments, however, are conducted as “piggyback” experiments and may not have a formally assigned ID. If a proper naming convention has not been defined prior to using this package, please contact <code>cappellil@fusion.gat.com</code> to resolve this issue.</p>
+<h1 class="code-line" data-line-start=186 data-line-end=187 ><a id="Using_the_GUI_186"></a>Using the GUI</h1>
+<p class="has-line-data" data-line-start="188" data-line-end="189">Once the CSV files and the MP ID are available, the GUI can be launched to begin uploading data.</p>
+<p class="has-line-data" data-line-start="190" data-line-end="191">In the DIII-D cluster, DiDIER is available as a module. To lunch the GUI within the cluster please type:</p>
+<pre><code class="has-line-data" data-line-start="193" data-line-end="196" class="language-bash">module load didier
+didier
+</code></pre>
+<p class="has-line-data" data-line-start="197" data-line-end="198">After launching a window opens where you can:</p>
+<ol start="0">
+<li class="has-line-data" data-line-start="199" data-line-end="200">Create or Edit an existing HDF5 file you already created where DiMES experiment data is stored (/fusion/projects/results/dimes/XXX-YY-ZZ.hdf5)</li>
+<li class="has-line-data" data-line-start="200" data-line-end="201">Enter/Edit experiment identification</li>
+<li class="has-line-data" data-line-start="201" data-line-end="202">Define the number of DiMES heads exposed</li>
+<li class="has-line-data" data-line-start="202" data-line-end="203">For each head specify: design, port location, surface element, and number of samples</li>
+</ol>
+<blockquote>
+<p class="has-line-data" data-line-start="203" data-line-end="204"><strong>NOTE</strong> If the inserted DiMES head design is set to <em>blank</em>, the head itself contains no samples and is therefore treated as a single sample. For this reason, only <strong>one</strong> sample can be selected when the chosen design is <em>blank</em>.</p>
+</blockquote>
+<ol start="4">
+<li class="has-line-data" data-line-start="205" data-line-end="206">For each sample, enter ID, label, comments, geometry, and measurement data</li>
+<li class="has-line-data" data-line-start="206" data-line-end="208">Save the data to an HDF5 file</li>
+</ol>
+<h2 class="code-line" data-line-start=208 data-line-end=209 ><a id="Data_Structure_208"></a>Data Structure</h2>
+<p class="has-line-data" data-line-start="210" data-line-end="211">The package organizes data in a hierarchical structure, using a list of predefined dataclasses:</p>
+<pre><code class="has-line-data" data-line-start="213" data-line-end="240">DiMESExperiment (dataclass defined within the package)
+├── id (miniproposal ID)
+└── heads (list of DimesHead dataclass)
+    ├── shots (int or list of int)
+    ├── design
+    ├── port_location
+    ├── surface_species
+    ├── images
+    └── samples (list of Sample dataclass)
+        ├── sample_id
+        ├── name
+        ├── position
+        ├── geometry (Geometry dataclass)
+        │   ├── microstructured
+        │   ├── area
+        │   └── inclination
+        └── measurements
+            ├── pre_exposure
+            │   ├── composition (SurfaceComposition dataclass)
+            │   └── roughness (SurfaceRoughness dataclass)
+            ├── exposure
+            │   ├── temperature (TemperatureMeasurements dataclass)
+            │   └── bias (BiasMeasurements dataclass)
+            └── post_exposure
+                ├── composition (SurfaceComposition dataclass)
+                └── roughness (SurfaceRoughness dataclass)
+</code></pre>
+<h2 class="code-line" data-line-start=241 data-line-end=242 ><a id="HDF5_File_Structure_241"></a>HDF5 File Structure</h2>
+<p class="has-line-data" data-line-start="243" data-line-end="244">The saved HDF5 files follow this structure:</p>
+<pre><code class="has-line-data" data-line-start="246" data-line-end="279">HDF5 File
+├── DESIGN_VERSION (attr) # version of hdf5 design (the hdf5 structure in other words)
+├── MINIPROPOSAL (group)
+│   └── ID (attr)
+└── HEADS (group)
+    └── 0, 1, 2, ... (groups, indexed)
+        ├── DESIGN, SURFACE_SPECIES, PORT_LOCATION (attrs)
+        ├── SHOTS (dataset, integer array)
+        ├── IMAGES (group, optional)
+        │   └── 0, 1, 2, ... (datasets, gzip compressed)
+        └── SAMPLES (group)
+            └── 0, 1, 2, ... (groups, indexed)
+                ├── ID, NAME, POSITION, POSITION_UNITS, COMMENTS (attrs)
+                ├── GEOMETRY (group)
+                │   ├── SHAPE, SURFACE_PATTERN (attrs)
+                │   ├── AREA (dataset + UNIT attr)
+                │   └── INCLINATION (dataset + UNIT attr)
+                └── MEASUREMENTS (group)
+                    ├── PRE_EXPOSURE (group, only if data exists)
+                    │   ├── SURFACE_COMPOSITION (group)
+                    │   ├── SURFACE_ROUGHNESS (group)
+                    │   ├── MORPHOLOGY (group)
+                    │   ├── AREAL_DENSITY (group)
+                    │   ├── TEMPERATURE (group)
+                    │   └── BIAS (group)
+                    └── POST_EXPOSURE (group, only if data exists)
+                        ├── SURFACE_COMPOSITION (group)
+                        ├── SURFACE_ROUGHNESS (group)
+                        ├── MORPHOLOGY (group)
+                        ├── AREAL_DENSITY (group)
+                        ├── TEMPERATURE (group)
+                        └── BIAS (group)
+</code></pre>
+<h2 class="code-line" data-line-start=280 data-line-end=281 ><a id="Contributing_280"></a>Contributing</h2>
+<p class="has-line-data" data-line-start="282" data-line-end="283">Contributions are welcome. Please contact the author for guidelines.</p>
+<h2 class="code-line" data-line-start=284 data-line-end=285 ><a id="Author_284"></a>Author</h2>
+<p class="has-line-data" data-line-start="286" data-line-end="289"><strong>Luca Cappelli</strong><br>
+Email: <a href="mailto:cappellil@fusion.gat.com">cappellil@fusion.gat.com</a><br>
+General Atomics - DIII-D National Fusion Facility</p>
