@@ -1,4 +1,4 @@
-**website to display the html file:** https://lc-ga.github.io/DiDIER-docs/
+**website to display the html file version of this Readme.md:** https://lc-ga.github.io/DiDIER-docs/
 
 # DiDIER
 
